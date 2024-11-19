@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const users = await prisma.user.findMany();
-    console.log("get users:", users);
-    return NextResponse.json({ users });
+    const products = await prisma.product.findMany();
+    console.log("get products:", products);
+    return NextResponse.json({ products });
   } catch (error) {
     return NextResponse.json({ error: error.message });
     // return NextResponse.status(500).json({ error: error.message });

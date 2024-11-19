@@ -29,9 +29,9 @@ const Users = () => {
   return (
     <div>
       <h2>Users</h2>
-      {users.length > 0 &&
+      {users?.length > 0 &&
         users.map((user) => (
-          <div key={user.uId}>
+          <div key={user.uID}>
             <h3>{user.uName}</h3>
             <p>{user.uPhone_Num}</p>
           </div>
