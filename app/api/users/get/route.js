@@ -1,16 +1,28 @@
+// /pages/api/users/getUserInfo.js
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const users = await prisma.user.findMany();
-    console.log("get users:", users);
-    return NextResponse.json({ users });
+    const authCookie = request.cookies.get("auth"); // Get the 'auth' cookie
+    if (!authCookie) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const uID = authCookie.value; // Assuming the cookie contains uID directly
+    const user = await prisma.user.findUnique({
+      where: { uID: uID },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ user });
   } catch (error) {
-    return NextResponse.json({ error: error.message });
-    // return NextResponse.status(500).json({ error: error.message });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

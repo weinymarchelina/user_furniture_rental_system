@@ -12,32 +12,38 @@ model user {
   uName       String
   uPhone_Num  String   @unique
   uPassword   String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
 
   @@map("User")
 }
 
 model product {
-  gID         String   @id @default(auto()) @map("_id") @db.ObjectId
+  pID         String   @id @default(auto()) @map("_id") @db.ObjectId
+  gID         Int
   gType       String
   gPrice      Int
   gNum        Int
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  gImage      String?
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
 
   @@map("goods")
 }
 
 model delivery {
   dID           String   @id @default(auto()) @map("_id") @db.ObjectId
-  gID           String
+  gID           Int
   uID           String
-  d_startDate   DateTime
+  d_startDate   DateTime @default(now())
   d_arriveDate  DateTime
   d_rentalTime  Int
   d_orderAmount Int
   d_destination String
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
 
   @@map("deliver_goods")
 }
+
+// npx prisma db push

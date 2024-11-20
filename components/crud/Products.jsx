@@ -15,7 +15,7 @@ const products = () => {
       }
 
       const data = await response.json();
-      console.log(data.products);
+      console.log(data);
       setProducts(data.products);
     } catch (error) {
       console.error(error);
