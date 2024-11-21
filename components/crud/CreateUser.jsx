@@ -1,4 +1,5 @@
 import { useState } from "react";
+import bcrypt from "bcryptjs"; // Import bcrypt for hashing
 
 const CreateUser = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const CreateUser = () => {
         },
         body: JSON.stringify({
           name,
-          phoneNumber,
+          phoneNumber: parseInt(phoneNumber),
           password,
         }),
       });
@@ -36,9 +37,9 @@ const CreateUser = () => {
       }
 
       return data;
-    } catch (error) {}
-
-    console.log({ name, phoneNumber, password });
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
   };
 
   return (

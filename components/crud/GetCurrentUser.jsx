@@ -1,6 +1,6 @@
-// components/ui/GetCurrentUser.js
 "use client";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie"; // Import js-cookie to handle cookies
 import SignOutButton from "../ui/SignOutButton";
 
 const GetCurrentUser = () => {
@@ -26,8 +26,20 @@ const GetCurrentUser = () => {
     }
   };
 
+  // Check if the cookie exists on component mount and remove it
   useEffect(() => {
-    getUserInfo();
+    const afterLoginCookie = Cookies.get("afterLogin");
+
+    if (afterLoginCookie) {
+      // Remove the cookie after login
+      Cookies.remove("afterLogin");
+
+      // Refresh the page after removing the cookie
+      window.location.reload(); // This will refresh the page
+    } else {
+      // If no cookie, fetch the user info
+      getUserInfo();
+    }
   }, []);
 
   if (error) {

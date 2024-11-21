@@ -8,49 +8,49 @@ export default function Login() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
+  // Hash the password before storing it
+  const saltRounds = 10;
+
   // Function to set cookie for authenticated user
   const setAuthCookie = (uID) => {
     document.cookie = `auth=${uID}; path=/; max-age=3600`; // Sets cookie for 1 hour
+    document.cookie = `afterLogin=True; path=/; max-age=3600`;
   };
 
   // Handle login on form submission
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Step 1: Check if phone number exists
-    const phoneResponse = await fetch("/api/auth/checkPhone", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phoneNumber }),
-    });
+    const parsedPhoneNum = parseInt(phoneNumber);
+    const hashedPassword = password;
+    // const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const phoneData = await phoneResponse.json();
-    if (!phoneResponse.ok || !phoneData.exists) {
-      setError("Phone number not found.");
-      return;
-    }
+    try {
+      const loginResponse = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber: parsedPhoneNum,
+          password: hashedPassword,
+        }),
+      });
 
-    // Step 2: Verify password
-    const loginResponse = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phoneNumber, password }),
-    });
+      if (!loginResponse.ok) {
+        const loginData = await loginResponse.json();
+        throw new Error(loginData.error || "Login failed. Please try again.");
+      }
 
-    const loginData = await loginResponse.json();
-    if (!loginResponse.ok) {
-      setError(loginData.error || "Login failed. Please try again.");
-      return;
-    }
+      const loginData = await loginResponse.json();
 
-    // Step 3: If login is successful, set the 'auth' cookie and redirect
-    if (loginData.uID) {
-      setAuthCookie(loginData.uID); // Set auth cookie
-      router.push("/"); // Redirect to home page
+      // Step 3: If login is successful, set the 'auth' cookie and redirect
+      if (loginData.uID) {
+        setAuthCookie(loginData.uID); // Set auth cookie
+        router.push("/"); // Redirect to home page
+      }
+    } catch (error) {
+      setError(error.message);
     }
   };
 
