@@ -8,7 +8,7 @@ export async function POST(request) {
   const body = await request.json();
 
   if (
-    !body.goodsId ||
+    !body.gID ||
     !body.rentalTime ||
     !body.orderAmount ||
     !body.destination ||
@@ -25,7 +25,7 @@ export async function POST(request) {
   try {
     const delivery = await prisma.delivery.create({
       data: {
-        gID: body.goodsId,
+        gID: body.gID,
         uID: body.userId,
         d_startDate: new Date(),
         d_arriveDate: placeholderDate,

@@ -1,4 +1,6 @@
+"use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs"; // Import bcrypt for hashing
 
 const CreateUser = () => {
@@ -6,9 +8,10 @@ const CreateUser = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     try {
       const response = await fetch("/api/users/register", {
@@ -34,6 +37,7 @@ const CreateUser = () => {
         setErrorMessage(data.error);
       } else {
         console.log("User registered successfully", data);
+        router.push("/login");
       }
 
       return data;

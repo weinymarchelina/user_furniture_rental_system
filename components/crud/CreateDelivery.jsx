@@ -1,23 +1,58 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+// Helper function to read cookies
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+
+  if (parts.length === 2) return parts.pop().split(";").shift();
+};
+
+// Helper function to delete cookies
+const deleteCookie = (name) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+};
 
 const CreateDelivery = () => {
-  const [goodsId, setGoodsId] = useState(0);
+  const [product, setProduct] = useState(null); // To store product info
   const [rentalTime, setRentalTime] = useState(0);
   const [orderAmount, setOrderAmount] = useState(0);
   const [destination, setDestination] = useState("");
-
   const [errorMessage, setErrorMessage] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0); // To store the calculated total price
+  const router = useRouter();
+
+  useEffect(() => {
+    // Get product data from the cookie
+    const productInfo = getCookie("product");
+    if (productInfo) {
+      setProduct(JSON.parse(productInfo)); // Parse cookie string to JSON
+    } else {
+      // If there is no product cookie, redirect to /product page
+      router.push("/product");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    // Update total price whenever orderAmount or rentalTime changes
+    if (product && orderAmount > 0 && rentalTime > 0) {
+      const calculatedPrice = product.gPrice * orderAmount * rentalTime;
+      setTotalPrice(calculatedPrice);
+    }
+  }, [orderAmount, rentalTime, product]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate inputs before making the request
-    if (!goodsId.trim()) {
-      setErrorMessage("Goods ID is required and must be a valid string.");
+    if (!orderAmount || orderAmount > product.gNum) {
+      setErrorMessage(`Order Amount must be between 1 and ${product.gNum}.`);
       return;
     }
 
-    const parsedGoodsId = parseInt(goodsId, 10);
     const parsedRentalTime = parseInt(rentalTime, 10);
     const parsedOrderAmount = parseInt(orderAmount, 10);
 
@@ -36,17 +71,29 @@ const CreateDelivery = () => {
     }
 
     try {
+      console.log("create delivery");
+
+      // Step 1: Get the user ID from the auth cookie
+      const userID = getCookie("auth");
+
+      if (!userID) {
+        setErrorMessage("User not authenticated.");
+        return;
+      }
+
+      // Step 2: Create the delivery order
       const response = await fetch("/api/deliveries/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          goodsId: parsedGoodsId,
+          gID: product.gID,
+          pID: product.pID,
           rentalTime: parsedRentalTime,
           orderAmount: parsedOrderAmount,
           destination,
-          userId: "67389bd7c5d0ceb4b46e17e5",
+          userId: userID, // Use the actual userID from the auth cookie
         }),
       });
 
@@ -59,10 +106,34 @@ const CreateDelivery = () => {
 
       if (data.error) {
         setErrorMessage(data.error);
-      } else {
-        console.log("Delivery order registered successfully", data);
-        setErrorMessage(""); // Clear error message on success
+        return;
       }
+
+      console.log("update stock");
+
+      // Step 3: Update product stock after successful delivery order
+      const stockUpdateResponse = await fetch("/api/products/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pID: product.pID,
+          orderAmount: parsedOrderAmount,
+        }),
+      });
+
+      if (!stockUpdateResponse.ok) {
+        throw new Error("Failed to update stock");
+      }
+
+      // Step 4: Remove the product cookie after the transaction is done
+      deleteCookie("product");
+
+      // Step 5: Redirect to delivery page after everything is done
+      console.log("Delivery order registered successfully", data);
+      setErrorMessage(""); // Clear error message on success
+      router.push("/delivery"); // Navigate to the next page
     } catch (error) {
       console.error(error);
       setErrorMessage("An unexpected error occurred.");
@@ -71,56 +142,81 @@ const CreateDelivery = () => {
 
   return (
     <>
-      {errorMessage ? (
+      {errorMessage && (
         <div className="error-message" style={{ color: "red" }}>
           {errorMessage}
         </div>
-      ) : null}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Goods ID:
-          <input
-            type="number"
-            placeholder="Goods ID"
-            value={goodsId}
-            onChange={(e) => setGoodsId(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Order Amount:
-          <input
-            type="number"
-            min="1"
-            placeholder="Order Amount"
-            value={orderAmount}
-            onChange={(e) => setOrderAmount(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Rental Time:
-          <input
-            type="number"
-            min="1"
-            placeholder="Rental Time"
-            value={rentalTime}
-            onChange={(e) => setRentalTime(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Destination:
-          <input
-            type="text"
-            placeholder="Destination"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Check Out</button>
-      </form>
+      )}
+
+      {product && (
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Type: <strong>{product.gType}</strong>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Price: <strong>${product.gPrice}</strong>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Image:
+              <div>
+                <img src={product.gImage} alt={product.gType} width="100" />
+              </div>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Order Amount:
+              <input
+                type="number"
+                min="1"
+                max={product.gNum}
+                value={orderAmount}
+                onChange={(e) => setOrderAmount(e.target.value)}
+                required
+              />
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Rental Time:
+              <input
+                type="number"
+                min="1"
+                value={rentalTime}
+                onChange={(e) => setRentalTime(e.target.value)}
+                required
+              />
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <label>
+              Destination:
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                required
+              />
+            </label>
+          </div>
+
+          <div style={{ marginBottom: "10px" }}>
+            <strong>Total Price: ${totalPrice}</strong>
+          </div>
+
+          <button type="submit">Check Out</button>
+        </form>
+      )}
     </>
   );
 };

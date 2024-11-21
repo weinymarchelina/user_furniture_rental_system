@@ -10,7 +10,6 @@ export default function Register() {
       <h1>Register User</h1>
 
       <CreateUser />
-      <Users />
     </div>
   );
 }
