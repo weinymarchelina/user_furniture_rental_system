@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Container } from "@mui/material";
 
 // Helper function to check if the auth cookie exists
 const checkAuthCookie = () => {
@@ -63,11 +64,11 @@ const ProtectedRoute = ({ children }) => {
     (window.location.pathname === "/login" ||
       window.location.pathname === "/register")
   ) {
-    return <>{children}</>;
+    return <Container>{children}</Container>;
   }
 
   // Render the children if authenticated
-  return <>{isAuthenticated ? children : null}</>;
+  return <Container>{isAuthenticated ? children : null}</Container>;
 };
 
 export default ProtectedRoute;

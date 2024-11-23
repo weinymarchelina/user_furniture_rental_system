@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@mui/material";
+
 const SignOutButton = () => {
   const handleSignOut = () => {
     // Delete the 'auth' cookie
@@ -7,7 +9,11 @@ const SignOutButton = () => {
     window.location.href = "/"; // Redirect to home page
   };
 
-  return <button onClick={handleSignOut}>Sign Out</button>;
+  return (
+    <Button variant="contained" color="primary" onClick={handleSignOut}>
+      Sign Out
+    </Button>
+  );
 };
 
 export default SignOutButton;

@@ -1,6 +1,7 @@
 import "./globals.css";
 import NavBar from "../components/ui/Navbar";
-import ProtectedRoute from "../components/auth/ProtectedRoute"; // Import ProtectedRoute
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import ThemeProvider from "../components/ui/ThemeProvider"; // Import the reusable ThemeProvider
 
 export const metadata = {
   title: "Create Next App",
@@ -11,9 +12,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        {/* Wrap the children with ProtectedRoute */}
-        <ProtectedRoute>{children}</ProtectedRoute>
+        <ThemeProvider>
+          <NavBar />
+          <ProtectedRoute>{children}</ProtectedRoute>
+        </ThemeProvider>
       </body>
     </html>
   );
