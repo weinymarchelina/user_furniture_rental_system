@@ -2,6 +2,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // For redirection
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const AuthUser = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -52,22 +54,43 @@ const AuthUser = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px",
+        textAlign: "center",
+      }}
+    >
       <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input
+      <form
+        onSubmit={handleLogin}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          width: "70%",
+        }}
+      >
+        <TextField
           type="text"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="Phone Number"
+          label="Phone Number"
+          variant="standard"
         />
-        <input
+        <TextField
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          label="Password"
+          variant="standard"
         />
-        <button type="submit">Login</button>
+        <Button type="submit" variant="contained">
+          Login
+        </Button>
       </form>
       {error && <div style={{ color: "red" }}>{error}</div>}
     </div>

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs"; // Import bcrypt for hashing
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 const CreateUser = () => {
   const [name, setName] = useState("");
@@ -47,35 +49,60 @@ const CreateUser = () => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px",
+        textAlign: "center",
+      }}
+    >
       {errorMessage ? (
         <div className="error-message">Error: {errorMessage}</div>
       ) : null}
-      <form onSubmit={handleSubmit}>
-        <input
+
+      <h1>Register</h1>
+
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          width: "70%",
+        }}
+      >
+        <TextField
           type="text"
-          placeholder="Name"
+          label="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          variant="standard"
         />
-        <input
+        <TextField
           type="text"
-          placeholder="Phone Number"
+          label="Phone Number"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           required
+          variant="standard"
         />
-        <input
+        <TextField
           type="password"
-          placeholder="Password"
+          label="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          variant="standard"
         />
-        <button type="submit">Create User</button>
+        <Button type="submit" variant="contained">
+          Create User
+        </Button>
       </form>
-    </>
+    </div>
   );
 };
 

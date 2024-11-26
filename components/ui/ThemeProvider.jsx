@@ -17,5 +17,16 @@ const theme = createTheme({
 });
 
 export default function ThemeProvider({ children }) {
-  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>;
+  return (
+    <div
+      style={{
+        backgroundImage:
+          'url("https://www.transparenttextures.com/patterns/redox-02.png")',
+        backgroundRepeat: "repeat",
+        minHeight: "100vh", // Ensure the background covers the full viewport height
+      }}
+    >
+      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
+    </div>
+  );
 }

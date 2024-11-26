@@ -3,6 +3,11 @@
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 const NavBar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // Start with null to avoid flicker on initial render
@@ -17,27 +22,73 @@ const NavBar = () => {
   if (isAuthenticated === null) return null;
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        gap: "1rem",
-        padding: "1rem",
-        background: "#f5f5f5",
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#f5f5f5",
+        boxShadow: "none",
+        padding: "0.5rem 1rem",
       }}
     >
-      {isAuthenticated ? (
-        <>
-          <Link href="/">Home</Link>
-          <Link href="/product">Products</Link>
-          <Link href="/delivery">Deliveries</Link>
-        </>
-      ) : (
-        <>
-          <Link href="/register">Register</Link>
-          <Link href="/login">Login</Link>
-        </>
-      )}
-    </nav>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {isAuthenticated ? (
+          <Typography
+            variant="h6"
+            color="primary"
+            component={Link}
+            href="/"
+            sx={{
+              fontWeight: "bold",
+              textDecoration: "none",
+              cursor: "pointer",
+            }}
+          >
+            MyApp
+          </Typography>
+        ) : (
+          <Typography
+            variant="h6"
+            color="primary"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            MyApp
+          </Typography>
+        )}
+
+        <Box sx={{ display: "flex", gap: "1rem" }}>
+          {isAuthenticated ? (
+            <>
+              <Button component={Link} href="/">
+                Home
+              </Button>
+              <Button component={Link} href="/product">
+                Products
+              </Button>
+              <Button component={Link} href="/delivery">
+                Deliveries
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button component={Link} href="/register">
+                Register
+              </Button>
+              <Button component={Link} href="/login">
+                Login
+              </Button>
+            </>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 
