@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs"; // Import bcrypt for hashing
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 const CreateUser = () => {
   const [name, setName] = useState("");
@@ -59,12 +61,20 @@ const CreateUser = () => {
         textAlign: "center",
       }}
     >
-      {errorMessage ? (
-        <div className="error-message">Error: {errorMessage}</div>
-      ) : null}
-
       <h1>Register</h1>
-
+      {errorMessage && (
+        <Alert
+          severity="error"
+          style={{
+            marginBottom: "20px",
+            width: "70%",
+            textAlign: "left",
+          }}
+        >
+          <AlertTitle>Error</AlertTitle>
+          {errorMessage}
+        </Alert>
+      )}
       <form
         onSubmit={handleSubmit}
         style={{

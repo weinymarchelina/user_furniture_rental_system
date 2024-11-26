@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation"; // For redirection
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 const AuthUser = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -65,6 +67,19 @@ const AuthUser = () => {
       }}
     >
       <h1>Login</h1>
+      {error && (
+        <Alert
+          severity="error"
+          style={{
+            marginBottom: "20px",
+            width: "70%",
+            textAlign: "left",
+          }}
+        >
+          <AlertTitle>Error</AlertTitle>
+          {error}
+        </Alert>
+      )}
       <form
         onSubmit={handleLogin}
         style={{
@@ -92,7 +107,6 @@ const AuthUser = () => {
           Login
         </Button>
       </form>
-      {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
   );
 };

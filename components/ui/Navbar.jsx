@@ -37,31 +37,44 @@ const NavBar = () => {
           alignItems: "center",
         }}
       >
-        {isAuthenticated ? (
-          <Typography
-            variant="h6"
-            color="primary"
-            component={Link}
-            href="/"
-            sx={{
-              fontWeight: "bold",
-              textDecoration: "none",
-              cursor: "pointer",
-            }}
-          >
-            MyApp
-          </Typography>
-        ) : (
-          <Typography
-            variant="h6"
-            color="primary"
-            sx={{
-              fontWeight: "bold",
-            }}
-          >
-            MyApp
-          </Typography>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+        >
+          <img
+            src="/logo_crop.png"
+            alt="FlexiFurnish Logo"
+            style={{ height: "50px", width: "50px" }}
+          />
+          {isAuthenticated ? (
+            <Typography
+              variant="h6"
+              color="primary"
+              component={Link}
+              href="/"
+              sx={{
+                fontWeight: "bold",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+            >
+              FlexiFurnish
+            </Typography>
+          ) : (
+            <Typography
+              variant="h6"
+              color="primary"
+              sx={{
+                fontWeight: "bold",
+              }}
+            >
+              FlexiFurnish
+            </Typography>
+          )}
+        </Box>
 
         <Box sx={{ display: "flex", gap: "1rem" }}>
           {isAuthenticated ? (
