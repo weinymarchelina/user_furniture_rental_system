@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Card, CardContent, CardMedia, Typography, Grid, Box, Chip } from "@mui/material";
 
 // Helper function to read cookies
 const getCookie = (name) => {
@@ -80,67 +81,92 @@ const Deliveries = () => {
   };
 
   return (
-    <div>
+    <Box>
       {deliveries?.length > 0 ? (
-        deliveries.map((delivery) => {
-          // Find the corresponding product for the current delivery
-          const product = products.find((p) => p.gID === delivery.gID);
+        <Grid container spacing={3}>
+          {deliveries.map((delivery) => {
+            const product = products.find((p) => p.gID === delivery.gID);
+            const totalPrice = product
+              ? delivery.d_orderAmount *
+                delivery.d_rentalTime *
+                product.gPrice
+              : 0;
 
-          // Calculate the total price (orderAmount * rentalTime * gPrice)
-          const totalPrice = product
-            ? delivery.d_orderAmount * delivery.d_rentalTime * product.gPrice
-            : 0;
+            const { status, color, arrivalDate } = getDeliveryStatus(
+              delivery.d_arriveDate
+            );
 
-          // Get the status and color for the delivery based on d_arriveDate
-          const { status, color, arrivalDate } = getDeliveryStatus(
-            delivery.d_arriveDate
-          );
+            return (
+              <Grid item xs={12} sm={6} md={4} key={delivery.dID}>
+                <Card sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  {product?.gImage && (
+                    <CardMedia
+                      component="img"
+                      alt={product.gType}
+                      height="200"
+                      image={product.gImage}
+                    />
+                  )}
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div">
+                      Delivery to: {delivery.d_destination}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Rental Time: {delivery.d_rentalTime} days
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Order Amount: {delivery.d_orderAmount}
+                    </Typography>
+                    <Chip
+                      label={`Status: ${status}`}
+                      color={status === "Arrived" ? "success" : "error"} //green and red color
+                      sx={{ mt: 1,  }}
+                    />
+                    {status === "Arrived" && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        Arrival Date: {arrivalDate}
+                      </Typography>
+                    )}
 
-          return (
-            <div
-              key={delivery.dID}
-              style={{
-                marginBottom: "20px",
-                border: "1px solid #ccc",
-                padding: "10px",
-              }}
-            >
-              <h3>Delivery to: {delivery.d_destination}</h3>
-              <p>Rental Time: {delivery.d_rentalTime} days</p>
-              <p>Order Amount: {delivery.d_orderAmount}</p>
-
-              {/* Delivery Status */}
-              <p style={{ color: color, fontWeight: "bold" }}>
-                Status: {status}
-              </p>
-
-              {/* Display the arrival date if the item has arrived */}
-              {status === "Arrived" && (
-                <p>Arrival Date: {arrivalDate}</p> // Display the arrival date
-              )}
-
-              {/* Show product details if found */}
-              {product ? (
-                <div>
-                  <h4>Product Details:</h4>
-                  <p>Type: {product.gType}</p>
-                  <p>Price: ${product.gPrice}</p>
-                  <p>Available Quantity: {product.gNum}</p>
-                  <div>
-                    <img src={product.gImage} alt={product.gType} width="100" />
-                  </div>
-                  <h5>Total Paid: ${totalPrice}</h5>
-                </div>
-              ) : (
-                <p>Product details not found for gID: {delivery.gID}</p>
-              )}
-            </div>
-          );
-        })
+                    {product ? (
+                      <>
+                        <Typography variant="subtitle1" component="div" sx={{ mt: 2 }}>
+                          Product Details
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Type: {product.gType}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Price: ${product.gPrice}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Available Quantity: {product.gNum}
+                        </Typography>
+                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 1 }}>
+                          Total Paid: ${totalPrice}
+                        </Typography>
+                      </>
+                    ) : (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 2 }}
+                      >
+                        Product details not found for gID: {delivery.gID}
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
       ) : (
-        <p>No deliveries found.</p>
+        <Typography variant="h6" align="center">
+          No deliveries found.
+        </Typography>
       )}
-    </div>
+    </Box>
   );
 };
 

@@ -86,7 +86,7 @@ const AuthUser = () => {
           display: "flex",
           flexDirection: "column",
           gap: "20px",
-          width: "70%",
+          width: "60%",
         }}
       >
         <TextField

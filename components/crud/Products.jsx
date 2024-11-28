@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // For redirection
 import Image from "next/image"; // Next.js Image component for optimized images
+import { Card, CardContent, CardMedia, Typography, Button, Grid } from "@mui/material";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -47,32 +48,53 @@ const Products = () => {
   return (
     <div>
       {products?.length > 0 ? (
-        products.map((product) => (
-          <div
-            key={product.gID}
-            style={{
-              border: "1px solid #ccc",
-              padding: "1rem",
-              margin: "1rem",
-            }}
-          >
-            <h3>{product.gType}</h3>
-            <p>Price: ${product.gPrice}</p>
-            <p>Available: {product.gNum}</p>
-            {product.gImage && (
-              <Image
-                src={product.gImage} // Cloudinary image URL
-                alt={product.gType}
-                width={300} // Set the desired width
-                height={300} // Set the desired height
-                layout="intrinsic"
-              />
-            )}
-            <button onClick={() => handleBuy(product)}>Buy</button>
-          </div>
-        ))
+        <Grid container spacing={3}>
+          {products.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.gID} sx={{ display: "flex", justifyContent: "center" }}>
+              <Card
+                sx={{
+                  width: "100%", // Make the card take the full width of the grid item
+                  boxShadow: 3,
+                  borderRadius: 2,
+                  overflow: "hidden"
+                }}
+              >
+                {product.gImage && (
+                  <CardMedia
+                    component="img"
+                    alt={product.gType}
+                    height="200"
+                    image={product.gImage}
+                  />
+                )}
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {product.gType}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Price: ${product.gPrice}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Available: {product.gNum}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    sx={{ mt: 2 }}
+                    onClick={() => handleBuy(product)}
+                  >
+                    Buy
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       ) : (
-        <p>No products available</p>
+        <Typography variant="h6" align="center">
+          No products available
+        </Typography>
       )}
     </div>
   );
