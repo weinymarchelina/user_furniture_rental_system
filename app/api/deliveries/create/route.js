@@ -32,8 +32,6 @@ export async function POST(request) {
         d_rentalTime: body.rentalTime,
         d_orderAmount: body.orderAmount,
         d_destination: body.destination,
-
-        // d_startDate is omitted here to use the default value
       },
     });
 

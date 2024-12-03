@@ -10,7 +10,6 @@ export async function GET() {
     return NextResponse.json({ products });
   } catch (error) {
     return NextResponse.json({ error: error.message });
-    // return NextResponse.status(500).json({ error: error.message });
   } finally {
     await prisma.$disconnect();
   }

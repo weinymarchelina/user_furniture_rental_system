@@ -1,4 +1,3 @@
-// /pages/api/users/getUserInfo.js
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
@@ -6,12 +5,12 @@ const prisma = new PrismaClient();
 
 export async function GET(request) {
   try {
-    const authCookie = request.cookies.get("auth"); // Get the 'auth' cookie
+    const authCookie = request.cookies.get("auth");
     if (!authCookie) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const uID = authCookie.value; // Assuming the cookie contains uID directly
+    const uID = authCookie.value;
     const user = await prisma.user.findUnique({
       where: { uID: uID },
     });

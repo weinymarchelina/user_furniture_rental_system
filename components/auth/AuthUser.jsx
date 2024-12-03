@@ -1,7 +1,6 @@
-// components/auth/AuthUser.jsx
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // For redirection
+import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
@@ -13,13 +12,11 @@ const AuthUser = () => {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // Function to set cookie for authenticated user
   const setAuthCookie = (uID) => {
-    document.cookie = `auth=${uID}; path=/; max-age=3600`; // Sets cookie for 1 hour
+    document.cookie = `auth=${uID}; path=/; max-age=3600`;
     document.cookie = `afterLogin=True; path=/; max-age=3600`;
   };
 
-  // Handle login on form submission
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -45,10 +42,9 @@ const AuthUser = () => {
 
       const loginData = await loginResponse.json();
 
-      // If login is successful, set the 'auth' cookie and redirect
       if (loginData.uID) {
-        setAuthCookie(loginData.uID); // Set auth cookie
-        router.push("/"); // Redirect to home page
+        setAuthCookie(loginData.uID);
+        router.push("/");
       }
     } catch (error) {
       setError(error.message);

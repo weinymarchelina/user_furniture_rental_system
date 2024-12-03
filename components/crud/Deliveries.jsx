@@ -1,8 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardMedia, Typography, Grid, Box, Chip } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Grid,
+  Box,
+  Chip,
+} from "@mui/material";
 
-// Helper function to read cookies
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -14,17 +21,15 @@ const Deliveries = () => {
   const [deliveries, setDeliveries] = useState([]);
   const [products, setProducts] = useState([]);
 
-  // Fetch deliveries based on user ID from the auth cookie
   const getDeliveries = async () => {
     try {
-      const userID = getCookie("auth"); // Get user ID from the cookie
+      const userID = getCookie("auth");
 
       if (!userID) {
         console.error("User not authenticated!");
-        return; // Handle the case when the user is not authenticated
+        return;
       }
 
-      // Send the userID to the backend to fetch deliveries for that user
       const response = await fetch(`/api/deliveries/get`);
 
       if (!response.ok) {
@@ -35,7 +40,6 @@ const Deliveries = () => {
 
       const data = await response.json();
 
-      // Sort deliveries by the 'd_startDate' timestamp in descending order (latest first)
       const sortedDeliveries = data.deliveries.sort(
         (a, b) => new Date(b.d_startDate) - new Date(a.d_startDate)
       );
@@ -45,7 +49,6 @@ const Deliveries = () => {
     }
   };
 
-  // Fetch products
   const getProducts = async () => {
     try {
       const response = await fetch("/api/products/get");
@@ -66,7 +69,6 @@ const Deliveries = () => {
     getProducts();
   }, []);
 
-  // Function to determine the delivery status based on d_arriveDate
   const getDeliveryStatus = (arriveDate) => {
     const defaultDate = "1970-01-01T00:00:00Z";
     const isArrived =
@@ -75,7 +77,7 @@ const Deliveries = () => {
       ? {
           status: "Arrived",
           color: "green",
-          arrivalDate: new Date(arriveDate).toLocaleDateString(), // Format arrival date
+          arrivalDate: new Date(arriveDate).toLocaleDateString(),
         }
       : { status: "Not Arrived", color: "red" };
   };
@@ -87,9 +89,7 @@ const Deliveries = () => {
           {deliveries.map((delivery) => {
             const product = products.find((p) => p.gID === delivery.gID);
             const totalPrice = product
-              ? delivery.d_orderAmount *
-                delivery.d_rentalTime *
-                product.gPrice
+              ? delivery.d_orderAmount * delivery.d_rentalTime * product.gPrice
               : 0;
 
             const { status, color, arrivalDate } = getDeliveryStatus(
@@ -98,7 +98,14 @@ const Deliveries = () => {
 
             return (
               <Grid item xs={12} sm={6} md={4} key={delivery.dID}>
-                <Card sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Card
+                  sx={{
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
                   {product?.gImage && (
                     <CardMedia
                       component="img"
@@ -119,18 +126,26 @@ const Deliveries = () => {
                     </Typography>
                     <Chip
                       label={`Status: ${status}`}
-                      color={status === "Arrived" ? "success" : "error"} //green and red color
-                      sx={{ mt: 1,  }}
+                      color={status === "Arrived" ? "success" : "error"}
+                      sx={{ mt: 1 }}
                     />
                     {status === "Arrived" && (
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                      >
                         Arrival Date: {arrivalDate}
                       </Typography>
                     )}
 
                     {product ? (
                       <>
-                        <Typography variant="subtitle1" component="div" sx={{ mt: 2 }}>
+                        <Typography
+                          variant="subtitle1"
+                          component="div"
+                          sx={{ mt: 2 }}
+                        >
                           Product Details
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -142,7 +157,11 @@ const Deliveries = () => {
                         <Typography variant="body2" color="text.secondary">
                           Available Quantity: {product.gNum}
                         </Typography>
-                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 1 }}>
+                        <Typography
+                          variant="body1"
+                          fontWeight="bold"
+                          sx={{ mt: 1 }}
+                        >
                           Total Paid: ${totalPrice}
                         </Typography>
                       </>

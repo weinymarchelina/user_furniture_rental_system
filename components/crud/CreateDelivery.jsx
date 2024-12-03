@@ -14,7 +14,6 @@ import {
   Grid,
 } from "@mui/material";
 
-// Helper function to read cookies
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -22,33 +21,29 @@ const getCookie = (name) => {
   if (parts.length === 2) return parts.pop().split(";").shift();
 };
 
-// Helper function to delete cookies
 const deleteCookie = (name) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
 };
 
 const CreateDelivery = () => {
-  const [product, setProduct] = useState(null); // To store product info
-  const [rentalTime, setRentalTime] = useState(0);
-  const [orderAmount, setOrderAmount] = useState(0);
+  const [product, setProduct] = useState(null);
+  const [rentalTime, setRentalTime] = useState("");
+  const [orderAmount, setOrderAmount] = useState("");
   const [destination, setDestination] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0); // To store the calculated total price
+  const [totalPrice, setTotalPrice] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
-    // Get product data from the cookie
     const productInfo = getCookie("product");
     if (productInfo) {
-      setProduct(JSON.parse(productInfo)); // Parse cookie string to JSON
+      setProduct(JSON.parse(productInfo));
     } else {
-      // If there is no product cookie, redirect to /product page
       router.push("/product");
     }
   }, [router]);
 
   useEffect(() => {
-    // Update total price whenever orderAmount or rentalTime changes
     if (product && orderAmount > 0 && rentalTime > 0) {
       const calculatedPrice = product.gPrice * orderAmount * rentalTime;
       setTotalPrice(calculatedPrice);
@@ -58,7 +53,6 @@ const CreateDelivery = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate inputs before making the request
     if (!orderAmount || orderAmount > product.gNum) {
       setErrorMessage(`Order Amount must be between 1 and ${product.gNum}.`);
       return;
@@ -84,7 +78,6 @@ const CreateDelivery = () => {
     try {
       console.log("create delivery");
 
-      // Step 1: Get the user ID from the auth cookie
       const userID = getCookie("auth");
 
       if (!userID) {
@@ -92,7 +85,6 @@ const CreateDelivery = () => {
         return;
       }
 
-      // Step 2: Create the delivery order
       const response = await fetch("/api/deliveries/create", {
         method: "POST",
         headers: {
@@ -104,7 +96,7 @@ const CreateDelivery = () => {
           rentalTime: parsedRentalTime,
           orderAmount: parsedOrderAmount,
           destination,
-          userId: userID, // Use the actual userID from the auth cookie
+          userId: userID,
         }),
       });
 
@@ -122,7 +114,6 @@ const CreateDelivery = () => {
 
       console.log("update stock");
 
-      // Step 3: Update product stock after successful delivery order
       const stockUpdateResponse = await fetch("/api/products/update", {
         method: "PUT",
         headers: {
@@ -138,13 +129,11 @@ const CreateDelivery = () => {
         throw new Error("Failed to update stock");
       }
 
-      // Step 4: Remove the product cookie after the transaction is done
       deleteCookie("product");
 
-      // Step 5: Redirect to delivery page after everything is done
       console.log("Delivery order registered successfully", data);
-      setErrorMessage(""); // Clear error message on success
-      router.push("/delivery"); // Navigate to the next page
+      setErrorMessage("");
+      router.push("/delivery");
     } catch (error) {
       console.error(error);
       setErrorMessage("An unexpected error occurred.");

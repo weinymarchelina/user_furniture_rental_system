@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-// Initialize Prisma Client
 const prisma = new PrismaClient();
 
-// Helper function to get cookies from the request headers
 const getCookie = (name, cookies) => {
   const value = `; ${cookies}`;
   const parts = value.split(`; ${name}=`);
@@ -14,7 +12,6 @@ const getCookie = (name, cookies) => {
 
 export async function GET(request) {
   try {
-    // Extract the 'auth' cookie from the request headers to get the user ID
     const cookies = request.headers.get("cookie");
     const userID = getCookie("auth", cookies);
 
@@ -27,10 +24,9 @@ export async function GET(request) {
       );
     }
 
-    // Fetch deliveries for the authenticated user (by uID)
     const deliveries = await prisma.delivery.findMany({
       where: {
-        uID: userID, // Filter deliveries based on userID
+        uID: userID,
       },
     });
 

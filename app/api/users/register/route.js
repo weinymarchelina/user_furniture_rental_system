@@ -10,22 +10,20 @@ export async function POST(request) {
   if (!body.name || !body.phoneNumber || !body.password) {
     return NextResponse.json({
       error: "Missing required fields",
-      status: 400, // Changed to 400 for proper HTTP status
+      status: 400,
     });
   }
 
   console.log(body.name, body.phoneNumber);
 
   try {
-    // Hash the password
     const hashedPassword = await bcrypt.hash(body.password, 10);
 
-    // Create a new user with the hashed password
     const user = await prisma.user.create({
       data: {
         uName: body.name,
         uPhone_Num: body.phoneNumber,
-        uPassword: hashedPassword, // Store the hashed password
+        uPassword: hashedPassword,
       },
     });
 
@@ -40,12 +38,12 @@ export async function POST(request) {
           uPhone_Num: user.uPhone_Num,
         },
       },
-      { status: 201 } // Use 201 for resource creation
+      { status: 201 }
     );
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002" // Unique constraint violation
+      error.code === "P2002"
     ) {
       if (
         error.meta &&

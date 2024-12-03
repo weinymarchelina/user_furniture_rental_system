@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // For redirection
-import Image from "next/image"; // Next.js Image component for optimized images
-import { Card, CardContent, CardMedia, Typography, Button, Grid } from "@mui/material";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Button,
+  Grid,
+} from "@mui/material";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
-  // Function to get products from the server
   const getProducts = async () => {
     try {
       const response = await fetch("/api/products/get");
@@ -19,10 +25,10 @@ const Products = () => {
       }
 
       const data = await response.json();
-      // Filter out products with fewer than 1 gNum and sort by gID
+
       const filteredSortedProducts = data.products
-        .filter((product) => product.gNum > 0) // Exclude products with gNum <= 0
-        .sort((a, b) => a.gID - b.gID); // Sort products by gID (ascending)
+        .filter((product) => product.gNum > 0)
+        .sort((a, b) => a.gID - b.gID);
 
       setProducts(filteredSortedProducts);
     } catch (error) {
@@ -30,17 +36,14 @@ const Products = () => {
     }
   };
 
-  // Function to set cookie with product info and redirect to checkout page
   const handleBuy = (product) => {
-    // Store product info in cookies
     document.cookie = `product=${JSON.stringify(
       product
     )}; path=/; max-age=3600`;
-    // Redirect to checkout page
+
     router.push("/checkout");
   };
 
-  // Fetch products when component is mounted
   useEffect(() => {
     getProducts();
   }, []);
@@ -50,13 +53,20 @@ const Products = () => {
       {products?.length > 0 ? (
         <Grid container spacing={3}>
           {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.gID} sx={{ display: "flex", justifyContent: "center" }}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              key={product.gID}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
               <Card
                 sx={{
-                  width: "100%", // Make the card take the full width of the grid item
+                  width: "100%",
                   boxShadow: 3,
                   borderRadius: 2,
-                  overflow: "hidden"
+                  overflow: "hidden",
                 }}
               >
                 {product.gImage && (

@@ -1,30 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs"; // Using bcryptjs for consistency
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-// Function to find a user by phone number
 async function findUserByPhoneNumber(phoneNumber) {
   return await prisma.user.findUnique({
     where: { uPhone_Num: phoneNumber },
   });
 }
 
-// Function to verify the password (bcrypt comparison)
-
 async function verifyPassword(inputPassword, storedPassword) {
-  console.log("Input password:", inputPassword); // Debugging
-  console.log("Stored password hash:", storedPassword); // Debugging
-  return bcrypt.compare(inputPassword, storedPassword); // bcrypt compares input with the hash
+  console.log("Input password:", inputPassword);
+  console.log("Stored password hash:", storedPassword);
+  return bcrypt.compare(inputPassword, storedPassword);
 }
 
-/*
-async function verifyPassword(inputPassword, storedPassword) {
-  return inputPassword === storedPassword; // bcrypt compares input with the hash
-}
-*/
-
-// Named export for handling POST request
 export async function POST(req) {
   const { phoneNumber, password } = await req.json();
   console.log(
@@ -42,10 +32,9 @@ export async function POST(req) {
       });
     }
 
-    // Debugging stored password hash
     console.log("User stored hash:", user.uPassword);
     const isPasswordCorrect = await verifyPassword(password, user.uPassword);
-    console.log("Password match result:", isPasswordCorrect); // Debugging result of password comparison
+    console.log("Password match result:", isPasswordCorrect);
 
     if (!isPasswordCorrect) {
       return new Response(JSON.stringify({ error: "Incorrect password" }), {
