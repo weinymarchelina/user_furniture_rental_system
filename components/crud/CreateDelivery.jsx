@@ -2,6 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Alert,
+  Grid,
+} from "@mui/material";
 
 // Helper function to read cookies
 const getCookie = (name) => {
@@ -141,83 +152,77 @@ const CreateDelivery = () => {
   };
 
   return (
-    <>
+    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4, p: 3 }}>
       {errorMessage && (
-        <div className="error-message" style={{ color: "red" }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
           {errorMessage}
-        </div>
+        </Alert>
       )}
-
       {product && (
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Type: <strong>{product.gType}</strong>
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Price: <strong>${product.gPrice}</strong>
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Image:
-              <div>
-                <img src={product.gImage} alt={product.gType} width="100" />
-              </div>
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Order Amount:
-              <input
+          <Card sx={{ mb: 3 }}>
+            <CardMedia
+              component="img"
+              height="140"
+              image={product.gImage}
+              alt={product.gType}
+            />
+            <CardContent>
+              <Typography variant="h6">Type: {product.gType}</Typography>
+              <Typography variant="body1">Price: ${product.gPrice}</Typography>
+            </CardContent>
+          </Card>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Order Amount"
                 type="number"
-                min="1"
-                max={product.gNum}
+                fullWidth
+                inputProps={{ min: 1, max: product.gNum }}
                 value={orderAmount}
                 onChange={(e) => setOrderAmount(e.target.value)}
                 required
               />
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Rental Time:
-              <input
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Rental Time"
                 type="number"
-                min="1"
+                fullWidth
+                inputProps={{ min: 1 }}
                 value={rentalTime}
                 onChange={(e) => setRentalTime(e.target.value)}
                 required
               />
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <label>
-              Destination:
-              <input
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Destination"
                 type="text"
+                fullWidth
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 required
               />
-            </label>
-          </div>
-
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Total Price: ${totalPrice}</strong>
-          </div>
-
-          <button type="submit">Check Out</button>
+            </Grid>
+          </Grid>
+          <Box sx={{ my: 3 }}>
+            <Typography variant="h6">
+              Total Price: <strong>${totalPrice}</strong>
+            </Typography>
+          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            size="large"
+          >
+            Check Out
+          </Button>
         </form>
       )}
-    </>
+    </Box>
   );
 };
 

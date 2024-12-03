@@ -2,6 +2,15 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie"; // Import js-cookie to handle cookies
 import SignOutButton from "../ui/SignOutButton";
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
 
 const GetCurrentUser = () => {
   const [user, setUser] = useState(null);
@@ -26,7 +35,6 @@ const GetCurrentUser = () => {
     }
   };
 
-  // Check if the cookie exists on component mount and remove it
   useEffect(() => {
     const afterLoginCookie = Cookies.get("afterLogin");
 
@@ -43,20 +51,47 @@ const GetCurrentUser = () => {
   }, []);
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Box>
+    );
   }
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <div>
-      <h2>User Info</h2>
-      <p>Name: {user.uName}</p>
-      <p>Phone Number: {user.uPhone_Num}</p>
-      <SignOutButton />
-    </div>
+    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4, p: 2 }}>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            User Info
+          </Typography>
+          <Typography variant="body1">
+            <strong>Name:</strong> {user.uName}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Phone Number:</strong> {user.uPhone_Num}
+          </Typography>
+          <Box sx={{ mt: 3 }}>
+            <SignOutButton />
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 
