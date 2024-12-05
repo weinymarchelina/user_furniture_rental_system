@@ -50,6 +50,7 @@ const Products = () => {
 
   return (
     <div>
+      <h1>Product List</h1>
       {products?.length > 0 ? (
         <Grid container spacing={3}>
           {products.map((product) => (

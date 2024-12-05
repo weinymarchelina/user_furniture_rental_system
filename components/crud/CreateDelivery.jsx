@@ -197,7 +197,8 @@ const CreateDelivery = () => {
           </Grid>
           <Box sx={{ my: 3 }}>
             <Typography variant="h6">
-              Total Price: <strong>${totalPrice}</strong>
+              Total Price:{" "}
+              <span style={{ fontWeight: "bold" }}>${totalPrice}</span>
             </Typography>
           </Box>
           <Button
