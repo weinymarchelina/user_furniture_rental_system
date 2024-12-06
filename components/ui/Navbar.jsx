@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
@@ -10,15 +11,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
 const NavBar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // Start with null to avoid flicker on initial render
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    // Check for the 'auth' cookie on the client-side after the initial render
     const authCookie = Cookies.get("auth");
-    setIsAuthenticated(!!authCookie); // Update state based on the existence of the cookie
+    setIsAuthenticated(!!authCookie);
   }, []);
 
-  // If isAuthenticated is null, it means we're still checking the cookie, so don't render anything yet
   if (isAuthenticated === null) return null;
 
   return (
@@ -44,10 +43,13 @@ const NavBar = () => {
             gap: "0.5rem",
           }}
         >
-          <img
+          {/* Next.js Image Component */}
+          <Image
             src="/logo_crop.png"
             alt="FlexiFurnish Logo"
-            style={{ height: "50px", width: "50px" }}
+            width={50}
+            height={50}
+            priority
           />
           {isAuthenticated ? (
             <Typography

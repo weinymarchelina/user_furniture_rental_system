@@ -7,13 +7,11 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock document.cookie
 Object.defineProperty(document, "cookie", {
   writable: true,
   value: "",
 });
 
-// Utility to set cookie for testing
 const setCookie = (name, value) => {
   document.cookie = `${name}=${value}`;
 };
@@ -109,8 +107,8 @@ describe("CreateDelivery Component", () => {
 
     global.fetch = jest
       .fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({}) }) // For delivery creation
-      .mockResolvedValueOnce({ ok: true, json: async () => ({}) }); // For stock update
+      .mockResolvedValueOnce({ ok: true, json: async () => ({}) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({}) });
 
     render(<CreateDelivery />);
 

@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Home from "./page"; // Adjust the path as per your project structure
+import Home from "./page";
 import { useRouter } from "next/navigation";
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: jest.fn(), // Mock the push function
+    push: jest.fn(),
   }),
 }));
 
@@ -42,7 +42,6 @@ describe("Home Page", () => {
   it("renders the Testimonies section with correct content", () => {
     render(<Home />);
 
-    // Test "Why Choose Us" section
     expect(
       screen.getByRole("heading", { name: /Why Choose Us\?/i })
     ).toBeInTheDocument();
@@ -51,7 +50,6 @@ describe("Home Page", () => {
       screen.getByText("Get furniture delivered to your doorstep quickly.")
     ).toBeInTheDocument();
 
-    // Test "What Our Customers Say" section
     expect(
       screen.getByRole("heading", { name: /What Our Customers Say/i })
     ).toBeInTheDocument();
@@ -70,7 +68,6 @@ describe("Home Page", () => {
   it("renders the Footer section", () => {
     render(<Home />);
 
-    // Test for presence of Footer content
-    expect(screen.getByText(/©/i)).toBeInTheDocument(); // Adjust the content as per Footer implementation
+    expect(screen.getByText(/©/i)).toBeInTheDocument();
   });
 });
