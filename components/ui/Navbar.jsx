@@ -88,6 +88,9 @@ const NavBar = () => {
               <Button component={Link} href="/delivery">
                 Deliveries
               </Button>
+              <Button component={Link} href="/user">
+                User
+              </Button>
             </>
           ) : (
             <>

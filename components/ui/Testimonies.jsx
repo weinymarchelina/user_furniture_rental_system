@@ -27,8 +27,17 @@ const Testimonies = () => {
               description: "Hassle-free return process.",
             },
           ].map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card sx={{ p: 1, textAlign: "center", boxShadow: 3 }}>
+            <Grid item xs={12} sm={6} md={3} key={index} sx={{ display: "flex" }}>
+              <Card
+                sx={{
+                  p: 2,
+                  textAlign: "center",
+                  boxShadow: 3,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
                 <Typography variant="h6" component="div">
                   {item.title}
                 </Typography>
