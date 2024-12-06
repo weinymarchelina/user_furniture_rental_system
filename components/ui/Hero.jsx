@@ -21,6 +21,7 @@ const Hero = () => {
         alignItems: "center",
         justifyContent: "center",
         color: "#fff",
+        my: 5,
       }}
     >
       <Box

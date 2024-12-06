@@ -2,10 +2,10 @@ import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 
 const Testimonies = () => {
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2, mb: 5 }}>
       {/* Why Choose Us Section */}
       <Box sx={{ textAlign: "center", my: 5 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 5 }}>
           Why Choose Us?
         </Typography>
         <Grid container spacing={4} justifyContent="center">
@@ -27,7 +27,14 @@ const Testimonies = () => {
               description: "Hassle-free return process.",
             },
           ].map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index} sx={{ display: "flex" }}>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              key={index}
+              sx={{ display: "flex" }}
+            >
               <Card
                 sx={{
                   p: 2,
@@ -51,8 +58,8 @@ const Testimonies = () => {
       </Box>
 
       {/* What Our Customers Say Section */}
-      <Box sx={{ textAlign: "center", mt: 5 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
+      <Box sx={{ textAlign: "center", mt: 10 }}>
+        <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 5 }}>
           What Our Customers Say
         </Typography>
         <Grid container spacing={4} justifyContent="center">

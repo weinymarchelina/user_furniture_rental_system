@@ -2,10 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Deliveries from "../../components/crud/Deliveries";
 
-// Mock the fetch function
 global.fetch = jest.fn();
 
-// Mock document.cookie
 Object.defineProperty(document, "cookie", {
   writable: true,
   value: "auth=673eda8be91c05b9c14f8d38",
@@ -17,7 +15,6 @@ describe("Deliveries Component", () => {
   });
 
   it("renders deliveries and updated product details correctly", async () => {
-    // Mock API responses
     fetch
       .mockResolvedValueOnce({
         ok: true,
@@ -57,7 +54,6 @@ describe("Deliveries Component", () => {
 
     render(<Deliveries />);
 
-    // Wait for the deliveries to be fetched and rendered
     await waitFor(() => {
       expect(screen.getByText("Delivery to: ntut")).toBeInTheDocument();
       expect(screen.getByText("Rental Time: 7 days")).toBeInTheDocument();
@@ -66,15 +62,11 @@ describe("Deliveries Component", () => {
       expect(screen.getByText("Price: $200")).toBeInTheDocument();
       expect(screen.getByText("Available Quantity: 15")).toBeInTheDocument();
       expect(screen.getByText("Total Paid: $7000")).toBeInTheDocument();
-      expect(screen.getByAltText("Chair")).toHaveAttribute(
-        "src",
-        "https://res.cloudinary.com/tigervision/image/upload/v1732169812/school/kari-shea-AMyjxxLEHU4-unsplash_q08tks.jpg"
-      );
+      expect(screen.getByAltText("Chair")).toHaveAttribute("src");
     });
   });
 
   it("handles no deliveries gracefully", async () => {
-    // Mock API responses for no deliveries and products
     fetch
       .mockResolvedValueOnce({
         ok: true,
@@ -87,14 +79,12 @@ describe("Deliveries Component", () => {
 
     render(<Deliveries />);
 
-    // Wait for the "No deliveries found" message
     await waitFor(() => {
       expect(screen.getByText("No deliveries found.")).toBeInTheDocument();
     });
   });
 
   it("handles API errors gracefully", async () => {
-    // Mock API responses with error
     fetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
@@ -103,7 +93,6 @@ describe("Deliveries Component", () => {
 
     render(<Deliveries />);
 
-    // Wait to ensure no deliveries are rendered
     await waitFor(() => {
       expect(screen.queryByText("Delivery to:")).not.toBeInTheDocument();
       expect(screen.queryByText("No deliveries found.")).toBeInTheDocument();

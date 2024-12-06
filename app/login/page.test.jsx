@@ -6,7 +6,7 @@ const mockPush = jest.fn();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
-    push: "/",
+    push: "/user",
   }),
 }));
 

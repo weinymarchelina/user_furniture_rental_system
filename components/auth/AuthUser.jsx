@@ -44,7 +44,7 @@ const AuthUser = () => {
 
       if (loginData.uID) {
         setAuthCookie(loginData.uID);
-        router.push("/");
+        router.push("/user");
       }
     } catch (error) {
       setError(error.message);
